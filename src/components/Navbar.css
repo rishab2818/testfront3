@@ -1,0 +1,28 @@
+.navbar {
+    z-index: 1100; /* Ensures navbar is always on top */
+    position: sticky;
+    top: 0;
+    width: 100%;
+  }
+    .custom-navbar {
+      background-color: #0d6efd;
+      /* Bootstrap Primary or Facebook-like Blue */
+      color: white;
+    }
+  
+    .custom-navbar .navbar-brand,
+    .custom-navbar .user-name,
+    .custom-navbar .btn,
+    .custom-navbar .btn-outline-primary {
+      color: white;
+    }
+  
+    .custom-navbar .btn-outline-primary {
+      border-color: white;
+    }
+  
+    .custom-navbar .btn-outline-primary:hover {
+      background-color: white;
+      color: #0d6efd;
+      /* Primary color text after hover */
+    }
