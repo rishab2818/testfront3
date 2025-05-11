@@ -8,7 +8,7 @@ import AuthContext from "../context/AuthContext";
 const Bookmark = () => {
   const [activeTab, setActiveTab] = useState("Mains");
   const { user } = useContext(AuthContext);
-  const userId = user._id;
+  const userId = user?._id;
   const src = 1;
   const renderSection = () => {
     switch (activeTab) {

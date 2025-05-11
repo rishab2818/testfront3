@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios"; // Make sure axios is imported
 import { StarFill } from "react-bootstrap-icons";
-
+import {
+  showErrorToast,
+  showSuccessToast,
+  showWarningToast,
+} from "../../utils/toast";
 const fields = [
   { name: "structureClarity", label: "Structure & Clarity" },
   { name: "factualAccuracy", label: "Factual Accuracy" },
@@ -31,7 +35,7 @@ const RatingModal = ({ answerId, onClose, userId }) => {
 
   const handleSubmit = async () => {
     if (!userId) {
-      alert("User ID is missing. Please log in.");
+      showErrorToast("User ID is missing. Please log in.");
       return;
     }
 
@@ -47,12 +51,15 @@ const RatingModal = ({ answerId, onClose, userId }) => {
       );
 
       if (response.status === 200) {
-        alert(response.data.message || "Rating submitted successfully!");
+        showSuccessToast(
+          response.data.message || "Rating submitted successfully!"
+        );
         onClose();
       } else {
-        alert("Something went wrong. Please try again.");
+        showWarningToast("Operation completed with some warnings.");
       }
     } catch (error) {
+      showErrorToast("An error occurred during submission.");
       console.error("Error submitting rating:", error);
       alert(error.response?.data?.message || "Failed to submit rating.");
     } finally {

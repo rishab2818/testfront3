@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
 import axios from "axios";
 import { subjects } from "./constants/subjects";
 import QUsefulButton from "./QUsefulButton";
@@ -12,8 +13,9 @@ import RichTextEditor from "../../lexical/RichTextEditor";
 import PrivacySelector from "../EditorComponents/PrivacySelector";
 import AnonymousCheckbox from "../EditorComponents/AnonymousCheckbox";
 import AddAnswerToggle from "../EditorComponents/AddAnswerToggle";
-
+import { showErrorToast } from "../../utils/toast";
 import { Button } from "react-bootstrap";
+const personal_data = 2;
 const AllAnswersPage = () => {
   const { questionId } = useParams();
   const [question, setQuestion] = useState(null);
@@ -27,6 +29,7 @@ const AllAnswersPage = () => {
   const [privacy, setPrivacy] = useState("public");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const isOnlyHtmlTags = (content) => {
     const htmlTagsRegex = /<([a-z][\s\S]*?)>/gi;
     const cleanedContent = content.replace(htmlTagsRegex, "");
@@ -52,13 +55,13 @@ const AllAnswersPage = () => {
     fetchData();
   }, [questionId]);
   const handleSubmit = async () => {
-    if (!user || !user._id) {
-      console.log("User not logged in.");
+    if (!user || !user?._id) {
+      showErrorToast("User not logged in.");
       return;
     }
 
     if (!addAnswer || isOnlyHtmlTags(value)) {
-      console.log("Please add valid content to the answer!");
+      showErrorToast("Please add valid content to the answer!");
       return;
     }
 
@@ -66,7 +69,7 @@ const AllAnswersPage = () => {
       const response = await axios.post(
         "https://testback2-szuz.onrender.com/api/ans/answers",
         {
-          userId: user._id,
+          userId: user?._id,
           questionId: question._id,
           content: value,
           author: isAnonymous ? "Anonymous" : user.name,
@@ -159,7 +162,7 @@ const AllAnswersPage = () => {
             <span>{question.views} views</span>
             <QUsefulButton
               initialCount={question.useful}
-              userId={user._id}
+              userId={user?._id}
               queId={question._id}
             />
           </div>
@@ -222,7 +225,7 @@ const AllAnswersPage = () => {
 
                   <AUsefulButton
                     initialCount={ans.useful}
-                    userId={user._id}
+                    userId={user?._id}
                     ansId={ans._id}
                   />
                 </div>
@@ -245,9 +248,33 @@ const AllAnswersPage = () => {
                 className="d-flex justify-content-between align-items-center mt-2"
                 style={{ fontSize: "0.8rem" }}
               >
-                <BookmarkButton userId={user._id} ansId={ans._id} />
-                <div style={{ color: "#555" }}>
+                <BookmarkButton userId={user?._id} ansId={ans._id} />
+                {/* <div style={{ color: "#555" }}>
                   Answered by <strong>{ans.author || "Anonymous"}</strong>
+                </div> */}
+                <div
+                  className="text-end mt-2"
+                  style={{ fontSize: "0.8rem", color: "#555" }}
+                >
+                  Answered by{" "}
+                  {ans.author && ans.author !== "Anonymous" ? (
+                    <strong
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        navigate("/profile", {
+                          state: {
+                            userId: ans.userId,
+                            personal_profile: false,
+                            data_source: personal_data,
+                          },
+                        })
+                      }
+                    >
+                      {ans.author}
+                    </strong>
+                  ) : (
+                    <strong>Anonymous</strong>
+                  )}
                 </div>
               </div>
             </div>
@@ -265,7 +292,7 @@ const AllAnswersPage = () => {
       {/* Show Rating Modal */}
       {showRatingModal && (
         <RatingModal
-          userId={user._id}
+          userId={user?._id}
           answerId={selectedAnswerId}
           onClose={handleModalClose}
         />

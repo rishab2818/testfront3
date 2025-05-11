@@ -2,14 +2,14 @@
 import React, { useState } from "react";
 import { Bookmark, BookmarkFill } from "react-bootstrap-icons";
 import axios from "axios"; // Add axios to make API requests
-
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 const BookmarkButton = ({ userId, ansId }) => {
   const [bookmarked, setBookmarked] = useState(false);
   console.log(userId, ansId, "test");
   const handleClick = async () => {
     try {
       if (!userId || !ansId) {
-        console.error("User ID or Answer ID missing");
+        showErrorToast("Login to bookmark");
         return;
       }
 
@@ -22,9 +22,11 @@ const BookmarkButton = ({ userId, ansId }) => {
 
       if (response.status === 200) {
         setBookmarked((prev) => !prev); // Toggle bookmark on success
+        showSuccessToast(response.data.message);
         console.log(response.data.message); // Optional: log message like "Answer bookmarked" or "Answer unbookmarked"
       }
     } catch (error) {
+      showErrorToast("Error toggling bookmark");
       console.error("Error toggling bookmark:", error);
     }
   };

@@ -15,7 +15,7 @@ const ContentFeed = ({ page, src, userId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const { user } = useContext(AuthContext);
   const itemsPerPage = 5;
-  console.log(src, "Src");
+
   useEffect(() => {
     // const userId = user._id;
     const fetchData = async () => {

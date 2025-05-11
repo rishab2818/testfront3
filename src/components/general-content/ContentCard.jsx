@@ -59,7 +59,7 @@ const ContentCard = ({ question, answer, user }) => {
           <span>{question.views}</span>
           <QUsefulButton
             initialCount={question.useful}
-            userId={user._id}
+            userId={user?._id}
             queId={question.questionId}
           />
         </div>
@@ -105,7 +105,7 @@ const ContentCard = ({ question, answer, user }) => {
                 <span>{answer.views}</span>
                 <AUsefulButton
                   initialCount={answer.useful}
-                  userId={user._id}
+                  userId={user?._id}
                   ansId={answer.answerId}
                 />
               </div>
@@ -122,7 +122,7 @@ const ContentCard = ({ question, answer, user }) => {
             </div>
 
             <div className="text-end mt-2">
-              <BookmarkButton userId={user._id} ansId={answer.answerId} />
+              <BookmarkButton userId={user?._id} ansId={answer.answerId} />
             </div>
 
             <div
@@ -177,7 +177,7 @@ const ContentCard = ({ question, answer, user }) => {
       )}
       {showRatingModal && (
         <RatingModal
-          userId={user._id}
+          userId={user?._id}
           answerId={answer.answerId}
           onClose={() => setShowRatingModal(false)}
         />

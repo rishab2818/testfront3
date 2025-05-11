@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios"; // To make API requests
-
+import { showErrorToast } from "../../utils/toast";
 const AUsefulButton = ({ initialCount = 0, userId, ansId }) => {
   const [count, setCount] = useState(initialCount);
   const [marked, setMarked] = useState(false);
 
   const handleClick = async () => {
     try {
-      console.log(userId, ansId, "data");
-
+      if (!userId) {
+        showErrorToast("Login to mark answer useful");
+        return;
+      }
       // Send API request to backend to mark the answer as useful
       const response = await axios.post(
-        `http://localhost:5000/api/ans/answers/${ansId}/useful`,
+        `https://testback2-szuz.onrender.com/api/ans/answers/${ansId}/useful`,
         {
           userId: userId,
         }
